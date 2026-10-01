@@ -111,6 +111,8 @@ if __name__ == "__main__":
               f"{action['Charged']:<9} | {action['Discharged']:<12} | {action['Battery_Level']}")
 
 
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -119,10 +121,16 @@ from typing import List
 # 1. Initialize the app
 app = FastAPI(title="Smart Energy Optimizer API")
 
-# Add CORS middleware to allow requests from the React frontend
+# Restrict CORS to known origins. Configure extra origins via the
+# ALLOWED_ORIGINS env var (comma-separated), e.g. the deployed frontend URL.
+_origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
+_extra = os.environ.get("ALLOWED_ORIGINS", "")
+if _extra:
+    _origins += [o.strip() for o in _extra.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Allow all origins for local development
+    allow_origins=_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
