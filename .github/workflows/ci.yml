@@ -1,0 +1,33 @@
+name: CI
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a # v4
+      - uses: actions/setup-python@06da6279cdbca41027908073e81a4544dc79c06b # v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: pytest -q
+
+  node:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: energy-ui
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a # v4
+      - uses: actions/setup-node@7f84f1d52d0c56afb45c62fee31a93b843cea4d6 # v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: energy-ui/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
