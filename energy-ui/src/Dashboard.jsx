@@ -10,6 +10,10 @@ import {
 // Helpers
 const createEmptyArray = () => Array(24).fill(0);
 
+// API base URL: set VITE_API_URL for the deployed backend, falls back to
+// the local dev server.
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 // Sample Data
 const SAMPLE_M = 10;
 const SAMPLE_Z = 3;
@@ -65,7 +69,7 @@ export default function Dashboard() {
     const payload = { M: cleanM, Z: cleanZ, D: cleanD, X: cleanX, Y: cleanY };
 
     try {
-      const response = await fetch('http://localhost:8000/api/optimize', {
+      const response = await fetch(`${API_URL}/api/optimize`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -105,7 +109,6 @@ export default function Dashboard() {
   const totalCost = results?.total_cost ?? 0;
   const totalBought = results ? results.schedule.reduce((acc, row) => acc + row.B_bought, 0) : 0;
   const totalSold = results ? results.schedule.reduce((acc, row) => acc + row.B_sold, 0) : 0;
-  const netExchange = totalBought - totalSold;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
