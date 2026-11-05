@@ -23,7 +23,7 @@ jobs:
         working-directory: energy-ui
     steps:
       - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a # v4
-      - uses: actions/setup-node@7f84f1d52d0c56afb45c62fee31a93b843cea4d6 # v4
+      - uses: actions/setup-node@101b3474143230c3562bd21f0b3c3f8254784571 # v4
         with:
           node-version: 22
           cache: npm
